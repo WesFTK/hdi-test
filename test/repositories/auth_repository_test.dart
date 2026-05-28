@@ -1,15 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hdi_test/pages/auth/repository/auth_repository.dart';
 import 'package:hdi_test/utils/local_storage/local_storage.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_test/hive_ce_test.dart';
 
 void main() {
-  setUpAll(() async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    await LocalStorage.init();
+  setUp(() async {
+    await setUpTestHive();
+    final box = await Hive.openBox('app');
+    LocalStorage.boxForTest = box;
   });
 
-  setUp(() async {
-    await LocalStorage.setLoggedIn(false);
+  tearDown(() async {
+    await tearDownTestHive();
   });
 
   group('AuthRepository.login', () {

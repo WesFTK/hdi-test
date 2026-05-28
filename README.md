@@ -210,6 +210,16 @@ Each form factor matches its own design baseline with no manual overrides.
 
 ---
 
+## Tested On
+
+| Device | Type | OS |
+|--------|------|----|
+| Pixel 9 | Emulator (Mobile) | Android 16 |
+| Pixel Tablet | Emulator (Tablet) | Android 15 |
+| Xiaomi POCO X3 | Real Device | Android (MIUI) |
+
+---
+
 ## Tests
 
 ### Run all tests

@@ -11,6 +11,8 @@ class LocalStorage {
     _box = await Hive.openBox(_boxName);
   }
 
+  static set boxForTest(Box box) => _box = box;
+
   static T? get<T>(String key) => _box.get(key) as T?;
 
   static Future<void> set<T>(String key, T value) => _box.put(key, value);
