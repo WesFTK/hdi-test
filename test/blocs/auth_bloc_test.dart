@@ -22,9 +22,7 @@ void main() {
         when(() => mockRepo.isLoggedIn()).thenReturn(true);
         return AuthBloc(authRepository: mockRepo);
       },
-      expect: () => [
-        const AuthState(status: StatusState.loaded, isAuthenticated: true),
-      ],
+      expect: () => [const AuthState(status: StatusState.loaded, isAuthenticated: true)],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -33,9 +31,7 @@ void main() {
         when(() => mockRepo.isLoggedIn()).thenReturn(false);
         return AuthBloc(authRepository: mockRepo);
       },
-      expect: () => [
-        const AuthState(status: StatusState.loaded, isAuthenticated: false),
-      ],
+      expect: () => [const AuthState(status: StatusState.loaded, isAuthenticated: false)],
     );
   });
 
@@ -43,15 +39,13 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits loading then authenticated on valid credentials',
       build: () {
-        when(() => mockRepo.login('MB001', 'password123'))
-            .thenAnswer((_) async => const Success(true));
+        when(() => mockRepo.isLoggedIn()).thenReturn(false);
+        when(() => mockRepo.login('MB001', 'password123')).thenAnswer((_) async => const Success(true));
         return AuthBloc(authRepository: mockRepo);
       },
-      act: (bloc) => bloc.add(
-        const AuthEvent.loginSubmitted(
-            identifier: 'MB001', password: 'password123'),
-      ),
+      act: (bloc) => bloc.add(const AuthEvent.loginSubmitted(identifier: 'MB001', password: 'password123')),
       expect: () => [
+        const AuthState(status: StatusState.loaded, isAuthenticated: false),
         const AuthState(status: StatusState.loading),
         const AuthState(status: StatusState.loaded, isAuthenticated: true),
       ],
@@ -60,19 +54,15 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits loading then error on invalid credentials',
       build: () {
-        when(() => mockRepo.login('MB001', 'wrong'))
-            .thenAnswer((_) async => Failure(Exception('Incorrect password.')));
+        when(() => mockRepo.isLoggedIn()).thenReturn(false);
+        when(() => mockRepo.login('MB001', 'wrong')).thenAnswer((_) async => Failure(Exception('Incorrect password.')));
         return AuthBloc(authRepository: mockRepo);
       },
-      act: (bloc) => bloc.add(
-        const AuthEvent.loginSubmitted(
-            identifier: 'MB001', password: 'wrong'),
-      ),
+      act: (bloc) => bloc.add(const AuthEvent.loginSubmitted(identifier: 'MB001', password: 'wrong')),
       expect: () => [
+        const AuthState(status: StatusState.loaded, isAuthenticated: false),
         const AuthState(status: StatusState.loading),
-        const AuthState(
-            status: StatusState.error,
-            errorMessage: 'Incorrect password.'),
+        const AuthState(status: StatusState.error, errorMessage: 'Incorrect password.'),
       ],
     );
   });
@@ -81,12 +71,13 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits unauthenticated after logout',
       build: () {
-        when(() => mockRepo.logout())
-            .thenAnswer((_) async => const Success(unit));
+        when(() => mockRepo.isLoggedIn()).thenReturn(true);
+        when(() => mockRepo.logout()).thenAnswer((_) async => const Success(unit));
         return AuthBloc(authRepository: mockRepo);
       },
       act: (bloc) => bloc.add(const AuthEvent.logoutRequested()),
       expect: () => [
+        const AuthState(status: StatusState.loaded, isAuthenticated: true),
         const AuthState(status: StatusState.loaded, isAuthenticated: false),
       ],
     );
