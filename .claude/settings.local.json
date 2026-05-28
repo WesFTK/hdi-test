@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"d:\\\\Projects\\\\Project Flutter\\\\HDI\\\\hdi_test\" -Recurse -Force)",
+      "Bash(Select-Object FullName)",
+      "PowerShell(head -100)",
+      "Bash(grep -r \"class.*EdgeInsets\\\\|REdgeInsets\\\\|WEdgeInsets\\\\|HEdgeInsets\" \"C:/Users/Admin/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_screenutil-5.9.3\" --include=\"*.dart\" 2>/dev/null | head -20)",
+      "Read(//c/Users/Admin/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_screenutil-5.9.3/**)"
+    ]
+  }
+}
