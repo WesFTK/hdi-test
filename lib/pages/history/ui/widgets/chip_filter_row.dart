@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdi_test/core/theme/app_typography.dart';
 import 'package:hdi_test/utils/extensions/build_context_extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hdi_test/pages/history/ui/widgets/filters/filter_chip_item.dart';
+import 'package:hdi_test/pages/history/ui/widgets/filter_chip_item.dart';
 
 class ChipFilterRow<T> extends StatelessWidget {
   final String label;
@@ -32,22 +32,17 @@ class ChipFilterRow<T> extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(right: 8.w),
             child: Center(
-              child: Text(
-                '$label:',
-                style: AppTypography.badge.copyWith(color: cs.onSurfaceVariant),
-              ),
+              child: Text('$label:', style: AppTypography.badge.copyWith(color: cs.onSurfaceVariant)),
             ),
           ),
-          FilterChipItem(
-            label: 'All',
-            isSelected: selected == null,
-            onTap: () => onSelected(null),
+          FilterChipItem(label: 'All', isSelected: selected == null, onTap: () => onSelected(null)),
+          ...values.map(
+            (v) => FilterChipItem(
+              label: labelOf(v),
+              isSelected: selected == v,
+              onTap: () => onSelected(v == selected ? null : v),
+            ),
           ),
-          ...values.map((v) => FilterChipItem(
-                label: labelOf(v),
-                isSelected: selected == v,
-                onTap: () => onSelected(v == selected ? null : v),
-              )),
         ],
       ),
     );

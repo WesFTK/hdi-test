@@ -3,8 +3,8 @@ import 'package:hdi_test/core/theme/app_typography.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hdi_test/pages/history/bloc/history_bloc.dart';
-import 'package:hdi_test/pages/history/ui/widgets/filters/filter_chip_item.dart';
-import 'package:hdi_test/pages/history/ui/widgets/filters/filter_section_label.dart';
+import 'package:hdi_test/pages/history/ui/widgets/filter_chip_item.dart';
+import 'package:hdi_test/pages/history/ui/widgets/filter_section_label.dart';
 import 'package:hdi_test/utils/enums/transaction_category.dart';
 import 'package:hdi_test/utils/enums/transaction_status.dart';
 import 'package:hdi_test/utils/utils_function.dart';
@@ -42,22 +42,23 @@ class FilterSidePanel extends StatelessWidget {
             FilterChipItem(
               label: 'All',
               isSelected: selectedMonth == null,
-              onTap: () => bloc.add(HistoryEvent.filterChanged(
-                selectedStatus: selectedStatus,
-                selectedCategory: selectedCategory,
-              )),
+              onTap: () => bloc.add(
+                HistoryEvent.filterChanged(selectedStatus: selectedStatus, selectedCategory: selectedCategory),
+              ),
             ),
-            ...months.map((m) => FilterChipItem(
-                  label: UtilsFunction.formatDate(m, pattern: 'MMM yy'),
-                  isSelected: selectedMonth != null &&
-                      selectedMonth!.year == m.year &&
-                      selectedMonth!.month == m.month,
-                  onTap: () => bloc.add(HistoryEvent.filterChanged(
+            ...months.map(
+              (m) => FilterChipItem(
+                label: UtilsFunction.formatDate(m, pattern: 'MMM yy'),
+                isSelected: selectedMonth != null && selectedMonth!.year == m.year && selectedMonth!.month == m.month,
+                onTap: () => bloc.add(
+                  HistoryEvent.filterChanged(
                     selectedMonth: m,
                     selectedStatus: selectedStatus,
                     selectedCategory: selectedCategory,
-                  )),
-                )),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         Gap(20.h),
@@ -70,20 +71,23 @@ class FilterSidePanel extends StatelessWidget {
             FilterChipItem(
               label: 'All',
               isSelected: selectedStatus == null,
-              onTap: () => bloc.add(HistoryEvent.filterChanged(
-                selectedMonth: selectedMonth,
-                selectedCategory: selectedCategory,
-              )),
+              onTap: () => bloc.add(
+                HistoryEvent.filterChanged(selectedMonth: selectedMonth, selectedCategory: selectedCategory),
+              ),
             ),
-            ...TransactionStatus.values.map((s) => FilterChipItem(
-                  label: s.label,
-                  isSelected: selectedStatus == s,
-                  onTap: () => bloc.add(HistoryEvent.filterChanged(
+            ...TransactionStatus.values.map(
+              (s) => FilterChipItem(
+                label: s.label,
+                isSelected: selectedStatus == s,
+                onTap: () => bloc.add(
+                  HistoryEvent.filterChanged(
                     selectedMonth: selectedMonth,
                     selectedStatus: s == selectedStatus ? null : s,
                     selectedCategory: selectedCategory,
-                  )),
-                )),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         Gap(20.h),
@@ -96,20 +100,22 @@ class FilterSidePanel extends StatelessWidget {
             FilterChipItem(
               label: 'All',
               isSelected: selectedCategory == null,
-              onTap: () => bloc.add(HistoryEvent.filterChanged(
-                selectedMonth: selectedMonth,
-                selectedStatus: selectedStatus,
-              )),
+              onTap: () =>
+                  bloc.add(HistoryEvent.filterChanged(selectedMonth: selectedMonth, selectedStatus: selectedStatus)),
             ),
-            ...TransactionCategory.values.map((c) => FilterChipItem(
-                  label: c.label,
-                  isSelected: selectedCategory == c,
-                  onTap: () => bloc.add(HistoryEvent.filterChanged(
+            ...TransactionCategory.values.map(
+              (c) => FilterChipItem(
+                label: c.label,
+                isSelected: selectedCategory == c,
+                onTap: () => bloc.add(
+                  HistoryEvent.filterChanged(
                     selectedMonth: selectedMonth,
                     selectedStatus: selectedStatus,
                     selectedCategory: c == selectedCategory ? null : c,
-                  )),
-                )),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ],

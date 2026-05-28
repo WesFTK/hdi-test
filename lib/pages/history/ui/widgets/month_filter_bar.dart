@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hdi_test/pages/history/ui/widgets/filters/filter_chip_item.dart';
+import 'package:hdi_test/pages/history/ui/widgets/filter_chip_item.dart';
 import 'package:hdi_test/utils/utils_function.dart';
 
 class MonthFilterBar extends StatelessWidget {
@@ -19,16 +19,14 @@ class MonthFilterBar extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          FilterChipItem(
-            label: 'All',
-            isSelected: selected == null,
-            onTap: () => onChanged(null),
+          FilterChipItem(label: 'All', isSelected: selected == null, onTap: () => onChanged(null)),
+          ...months.map(
+            (m) => FilterChipItem(
+              label: UtilsFunction.formatDate(m, pattern: 'MMM yy'),
+              isSelected: selected != null && selected!.year == m.year && selected!.month == m.month,
+              onTap: () => onChanged(m),
+            ),
           ),
-          ...months.map((m) => FilterChipItem(
-                label: UtilsFunction.formatDate(m, pattern: 'MMM yy'),
-                isSelected: selected != null && selected!.year == m.year && selected!.month == m.month,
-                onTap: () => onChanged(m),
-              )),
         ],
       ),
     );

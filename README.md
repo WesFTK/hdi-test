@@ -85,12 +85,13 @@ lib/
 │   │       └── widgets/     # AuthBrandPanel, AuthAppIcon
 │   ├── dashboard/
 │   │   ├── bloc/            # DashboardBloc, DashboardEvent, DashboardState
-│   │   ├── repository/      # MemberRepository
+│   │   ├── repository/      # DashboardRepository
 │   │   └── ui/
 │   │       ├── pages/       # DashboardPage
 │   │       └── widgets/     # MemberInfoCard, SpendChart, RecentTile
 │   ├── history/
 │   │   ├── bloc/            # HistoryBloc, HistoryEvent, HistoryState
+        ├── repository/      # HistoryRepository
 │   │   └── ui/
 │   │       ├── pages/       # HistoryPage
 │   │       └── widgets/     # FilterSidePanel, MonthFilterBar, ChipFilterRow, FilterChipItem
@@ -98,7 +99,6 @@ lib/
 │       └── ui/
 │           ├── pages/       # PersonalizationPage
 │           └── widgets/     # ThemeSelector, ThemeOptionTile
-├── repositories/            # Shared TransactionRepository
 ├── router/                  # GoRouter setup with auth-based redirect
 ├── utils/
 │   ├── enums/               # StatusState, TransactionStatus, TransactionCategory
@@ -206,7 +206,7 @@ Each form factor matches its own design baseline with no manual overrides.
 - All data is in-memory mock data. Repositories add a 500 ms artificial delay to make shimmer visible.
 - Session uses a boolean flag in Hive (sufficient for mock auth; a real app would store a signed token).
 - `result_dart` is used with `AsyncResult<T>` = `Future<ResultDart<T, Exception>>`. The `fold` pattern keeps BLoC handlers free of try/catch.
-- Each feature page lives under `pages/<feature>/ui/pages/` and `ui/widgets/`. No barrel exports — router imports the canonical paths directly.
+- Each feature page lives under `pages/<feature>/ui/pages/` and `ui/widgets/`.
 
 ---
 
