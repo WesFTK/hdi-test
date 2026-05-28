@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hdi_test/core/theme/app_typography.dart';
+import 'package:hdi_test/pages/history/repository/history_repository.dart';
 import 'package:hdi_test/utils/extensions/build_context_extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hdi_test/pages/history/bloc/history_bloc.dart';
 import 'package:hdi_test/pages/history/ui/widgets/history_filters.dart';
-import 'package:hdi_test/pages/dashboard/repository/dashboard_repository.dart';
 import 'package:hdi_test/utils/enums/status_state.dart';
 import 'package:hdi_test/utils/enums/transaction_category.dart';
 import 'package:hdi_test/utils/enums/transaction_status.dart';
@@ -21,7 +21,7 @@ class HistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (ctx) =>
-          HistoryBloc(transactionRepository: ctx.read<TransactionRepository>())..add(const HistoryEvent.loadHistory()),
+          HistoryBloc(historyRepository: ctx.read<HistoryRepository>())..add(const HistoryEvent.loadHistory()),
       child: const _HistoryView(),
     );
   }

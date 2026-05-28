@@ -2,14 +2,17 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hdi_test/models/transaction_model.dart';
 import 'package:hdi_test/pages/history/bloc/history_bloc.dart';
-import 'package:hdi_test/repositories/transaction_repository.dart';
+import 'package:hdi_test/pages/dashboard/repository/dashboard_repository.dart';
+import 'package:hdi_test/pages/history/repository/history_repository.dart';
 import 'package:hdi_test/utils/enums/status_state.dart';
 import 'package:hdi_test/utils/enums/transaction_category.dart';
 import 'package:hdi_test/utils/enums/transaction_status.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:result_dart/result_dart.dart';
 
-class MockTransactionRepository extends Mock implements TransactionRepository {}
+class MockDashboardRepository extends Mock implements DashboardRepository {}
+
+class MockHistoryRepository extends Mock implements HistoryRepository {}
 
 final List<TransactionModel> _fixtures = [
   TransactionModel(
@@ -39,15 +42,14 @@ final List<TransactionModel> _fixtures = [
 ];
 
 void main() {
-  late MockTransactionRepository mockRepo;
+  late MockHistoryRepository mockRepo;
 
   setUp(() {
-    mockRepo = MockTransactionRepository();
-    when(() => mockRepo.getTransactions())
-        .thenAnswer((_) async => Success(_fixtures));
+    mockRepo = MockHistoryRepository();
+    when(() => mockRepo.getTransactions()).thenAnswer((_) async => Success(_fixtures));
   });
 
-  HistoryBloc buildBloc() => HistoryBloc(transactionRepository: mockRepo);
+  HistoryBloc buildBloc() => HistoryBloc(historyRepository: mockRepo);
 
   group('HistoryBloc — LoadHistory', () {
     blocTest<HistoryBloc, HistoryState>(
@@ -56,11 +58,7 @@ void main() {
       act: (bloc) => bloc.add(const HistoryEvent.loadHistory()),
       expect: () => [
         const HistoryState(status: StatusState.loading),
-        HistoryState(
-          status: StatusState.loaded,
-          allTransactions: _fixtures,
-          filteredTransactions: _fixtures,
-        ),
+        HistoryState(status: StatusState.loaded, allTransactions: _fixtures, filteredTransactions: _fixtures),
       ],
     );
   });
@@ -72,17 +70,11 @@ void main() {
       act: (bloc) async {
         bloc.add(const HistoryEvent.loadHistory());
         await Future.delayed(Duration.zero);
-        bloc.add(const HistoryEvent.filterChanged(
-          selectedStatus: TransactionStatus.paid,
-        ));
+        bloc.add(const HistoryEvent.filterChanged(selectedStatus: TransactionStatus.paid));
       },
       skip: 2,
       expect: () => [
-        isA<HistoryState>().having(
-          (s) => s.filteredTransactions.length,
-          'filteredTransactions length',
-          2,
-        ),
+        isA<HistoryState>().having((s) => s.filteredTransactions.length, 'filteredTransactions length', 2),
       ],
     );
 
@@ -92,17 +84,11 @@ void main() {
       act: (bloc) async {
         bloc.add(const HistoryEvent.loadHistory());
         await Future.delayed(Duration.zero);
-        bloc.add(const HistoryEvent.filterChanged(
-          selectedCategory: TransactionCategory.food,
-        ));
+        bloc.add(const HistoryEvent.filterChanged(selectedCategory: TransactionCategory.food));
       },
       skip: 2,
       expect: () => [
-        isA<HistoryState>().having(
-          (s) => s.filteredTransactions.length,
-          'filteredTransactions length',
-          2,
-        ),
+        isA<HistoryState>().having((s) => s.filteredTransactions.length, 'filteredTransactions length', 2),
       ],
     );
 
@@ -112,17 +98,11 @@ void main() {
       act: (bloc) async {
         bloc.add(const HistoryEvent.loadHistory());
         await Future.delayed(Duration.zero);
-        bloc.add(HistoryEvent.filterChanged(
-          selectedMonth: DateTime(2026, 5),
-        ));
+        bloc.add(HistoryEvent.filterChanged(selectedMonth: DateTime(2026, 5)));
       },
       skip: 2,
       expect: () => [
-        isA<HistoryState>().having(
-          (s) => s.filteredTransactions.length,
-          'filteredTransactions length',
-          2,
-        ),
+        isA<HistoryState>().having((s) => s.filteredTransactions.length, 'filteredTransactions length', 2),
       ],
     );
 
@@ -132,18 +112,11 @@ void main() {
       act: (bloc) async {
         bloc.add(const HistoryEvent.loadHistory());
         await Future.delayed(Duration.zero);
-        bloc.add(HistoryEvent.filterChanged(
-          selectedMonth: DateTime(2026, 5),
-          selectedStatus: TransactionStatus.paid,
-        ));
+        bloc.add(HistoryEvent.filterChanged(selectedMonth: DateTime(2026, 5), selectedStatus: TransactionStatus.paid));
       },
       skip: 2,
       expect: () => [
-        isA<HistoryState>().having(
-          (s) => s.filteredTransactions.length,
-          'filteredTransactions length',
-          1,
-        ),
+        isA<HistoryState>().having((s) => s.filteredTransactions.length, 'filteredTransactions length', 1),
       ],
     );
 
@@ -153,19 +126,13 @@ void main() {
       act: (bloc) async {
         bloc.add(const HistoryEvent.loadHistory());
         await Future.delayed(Duration.zero);
-        bloc.add(const HistoryEvent.filterChanged(
-          selectedStatus: TransactionStatus.paid,
-        ));
+        bloc.add(const HistoryEvent.filterChanged(selectedStatus: TransactionStatus.paid));
         await Future.delayed(Duration.zero);
         bloc.add(const HistoryEvent.filterChanged());
       },
       skip: 3,
       expect: () => [
-        isA<HistoryState>().having(
-          (s) => s.filteredTransactions.length,
-          'filteredTransactions length',
-          3,
-        ),
+        isA<HistoryState>().having((s) => s.filteredTransactions.length, 'filteredTransactions length', 3),
       ],
     );
   });

@@ -1,5 +1,4 @@
 import 'dart:math' show min;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +7,7 @@ import 'package:hdi_test/core/theme/theme_cubit.dart';
 import 'package:hdi_test/pages/auth/bloc/auth_bloc.dart';
 import 'package:hdi_test/pages/auth/repository/auth_repository.dart';
 import 'package:hdi_test/pages/dashboard/repository/dashboard_repository.dart';
+import 'package:hdi_test/pages/history/repository/history_repository.dart';
 import 'package:hdi_test/router/app_router.dart';
 import 'package:hdi_test/utils/local_storage/local_storage.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
@@ -27,8 +27,8 @@ class App extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>(create: (_) => AuthRepository()),
-        RepositoryProvider<MemberRepository>(create: (_) => MemberRepository()),
-        RepositoryProvider<TransactionRepository>(create: (_) => TransactionRepository()),
+        RepositoryProvider<DashboardRepository>(create: (_) => DashboardRepository()),
+        RepositoryProvider<HistoryRepository>(create: (_) => HistoryRepository()),
       ],
       child: BlocProvider<ThemeCubit>(create: (_) => ThemeCubit(), child: const _AppView()),
     );

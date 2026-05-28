@@ -27,10 +27,9 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (ctx) => DashboardBloc(
-        memberRepository: ctx.read<MemberRepository>(),
-        transactionRepository: ctx.read<TransactionRepository>(),
-      )..add(const DashboardEvent.loadDashboard()),
+      create: (ctx) =>
+          DashboardBloc(dashboardRepository: ctx.read<DashboardRepository>())
+            ..add(const DashboardEvent.loadDashboard()),
       child: const _DashboardView(),
     );
   }
@@ -154,26 +153,8 @@ class _DashboardView extends StatelessWidget {
     void onSeeAll() => context.pushNamed(RouteNames.history);
 
     return ScreenTypeLayout.builder(
-      mobile: (_) => _buildMobile(
-        onRefresh,
-        member,
-        paidThisMonth,
-        cs,
-        lastDate,
-        transactions,
-        onSeeAll,
-        recentTiles,
-      ),
-      tablet: (_) => _buildTablet(
-        onRefresh,
-        member,
-        paidThisMonth,
-        cs,
-        lastDate,
-        transactions,
-        onSeeAll,
-        recentTiles,
-      ),
+      mobile: (_) => _buildMobile(onRefresh, member, paidThisMonth, cs, lastDate, transactions, onSeeAll, recentTiles),
+      tablet: (_) => _buildTablet(onRefresh, member, paidThisMonth, cs, lastDate, transactions, onSeeAll, recentTiles),
     );
   }
 
@@ -240,10 +221,7 @@ class _DashboardView extends StatelessWidget {
                 Text('Recent Transactions', style: AppTypography.sectionTitle),
                 TextButton(
                   onPressed: onSeeAll,
-                  child: Text(
-                    'See All',
-                    style: AppTypography.captionMedium.copyWith(color: cs.primary),
-                  ),
+                  child: Text('See All', style: AppTypography.captionMedium.copyWith(color: cs.primary)),
                 ),
               ],
             ),
@@ -330,10 +308,7 @@ class _DashboardView extends StatelessWidget {
                       Text('Recent Transactions', style: AppTypography.sectionTitle),
                       TextButton(
                         onPressed: onSeeAll,
-                        child: Text(
-                          'See All',
-                          style: AppTypography.captionMedium.copyWith(color: cs.primary),
-                        ),
+                        child: Text('See All', style: AppTypography.captionMedium.copyWith(color: cs.primary)),
                       ),
                     ],
                   ),

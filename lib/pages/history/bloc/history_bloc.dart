@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hdi_test/models/transaction_model.dart';
-import 'package:hdi_test/pages/dashboard/repository/dashboard_repository.dart';
+import 'package:hdi_test/pages/history/repository/history_repository.dart';
 import 'package:hdi_test/utils/enums/status_state.dart';
 import 'package:hdi_test/utils/enums/transaction_category.dart';
 import 'package:hdi_test/utils/enums/transaction_status.dart';
@@ -11,11 +11,11 @@ part 'history_event.dart';
 part 'history_state.dart';
 
 class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
-  final TransactionRepository _transactionRepository;
+  final HistoryRepository _historyRepository;
 
-  HistoryBloc({required TransactionRepository transactionRepository})
-      : _transactionRepository = transactionRepository,
-        super(const HistoryState()) {
+  HistoryBloc({required HistoryRepository historyRepository})
+    : _historyRepository = historyRepository,
+      super(const HistoryState()) {
     on<HistoryEvent>(_onEvent);
   }
 
@@ -29,7 +29,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
 
   Future<void> _onLoadHistory(Emitter<HistoryState> emit) async {
     emit(state.copyWith(status: StatusState.loading, errorMessage: null));
-    final result = await _transactionRepository.getTransactions();
+    final result = await _historyRepository.getTransactions();
     result.fold(
       (transactions) => emit(
         state.copyWith(status: StatusState.loaded, allTransactions: transactions, filteredTransactions: transactions),
@@ -47,8 +47,8 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     if (state.status != StatusState.loaded) return;
 
     final filtered = state.allTransactions.where((t) {
-      final matchMonth = selectedMonth == null ||
-          (t.date.year == selectedMonth.year && t.date.month == selectedMonth.month);
+      final matchMonth =
+          selectedMonth == null || (t.date.year == selectedMonth.year && t.date.month == selectedMonth.month);
       final matchStatus = selectedStatus == null || t.status == selectedStatus;
       final matchCategory = selectedCategory == null || t.category == selectedCategory;
       return matchMonth && matchStatus && matchCategory;

@@ -10,26 +10,22 @@ part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  final MemberRepository _memberRepository;
-  final TransactionRepository _transactionRepository;
+  final DashboardRepository _dashboardRepository;
 
-  DashboardBloc({required MemberRepository memberRepository, required TransactionRepository transactionRepository})
-      : _memberRepository = memberRepository,
-        _transactionRepository = transactionRepository,
-        super(const DashboardState()) {
+  DashboardBloc({required DashboardRepository dashboardRepository})
+    : _dashboardRepository = dashboardRepository,
+      super(const DashboardState()) {
     on<DashboardEvent>(_onEvent);
   }
 
   Future<void> _onEvent(DashboardEvent event, Emitter<DashboardState> emit) async {
-    await event.when(
-      loadDashboard: () => _onLoadDashboard(emit),
-    );
+    await event.when(loadDashboard: () => _onLoadDashboard(emit));
   }
 
   Future<void> _onLoadDashboard(Emitter<DashboardState> emit) async {
     emit(state.copyWith(status: StatusState.loading, errorMessage: null));
-    final memberResult = await _memberRepository.getMember();
-    final txResult = await _transactionRepository.getTransactions();
+    final memberResult = await _dashboardRepository.getMember();
+    final txResult = await _dashboardRepository.getTransactions();
 
     memberResult.fold(
       (member) => txResult.fold(
