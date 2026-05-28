@@ -157,5 +157,21 @@ class MockData {
       status: TransactionStatus.paid,
       description: 'New Year Concert Ticket',
     ),
+    TransactionModel(
+      id: 'TRX019',
+      date: DateTime(2026, 06, 2),
+      category: TransactionCategory.other,
+      amount: 450000,
+      status: TransactionStatus.refunded,
+      description: 'Delta Premium Service',
+    ),
+    TransactionModel(
+      id: 'TRX020',
+      date: DateTime(2026, 06, 3),
+      category: TransactionCategory.travel,
+      amount: 1350000,
+      status: TransactionStatus.paid,
+      description: 'Ticket To Orsterra - Planetarium',
+    ),
   ];
 }
